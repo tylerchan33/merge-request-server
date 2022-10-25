@@ -1,1 +1,1 @@
-# MERN Auth Server
+# merge-request-server
