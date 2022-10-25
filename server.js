@@ -12,8 +12,8 @@ const rowdyResults = rowdy.begin(app)
 // cross origin resource sharing 
 app.use(cors())
 // request body parsing
-app.use(express.urlencoded({ extended: false })) // optional 
-app.use(express.json())
+app.use(express.urlencoded({ limit: '50mb' ,extended: true })) // optional 
+app.use(express.json({ limit: '50mb' } ))
 
 // GET / -- test index route
 app.get('/', (req, res) => {
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 
 // controllers
 app.use('/api-v1/users', require('./controllers/api-v1/users.js'))
-app.use('/api-v1/photos', require('/controllers/api-v1/photos'))
+app.use('/api-v1/photos', require('./controllers/api-v1/photos.js'))
 
 // hey listen
 app.listen(PORT, () => {
