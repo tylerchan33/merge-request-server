@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 
 // controllers
 app.use('/api-v1/users', require('./controllers/api-v1/users.js'))
+app.use('/api-v1/photos', require('/controllers/api-v1/photos'))
 
 // hey listen
 app.listen(PORT, () => {
