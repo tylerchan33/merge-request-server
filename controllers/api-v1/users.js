@@ -105,6 +105,8 @@ router.post('/register', async (req, res) => {
       photo: newUser.photo,
       birthYear: newUser.birthYear,
       favoritePLanguage: newUser.favoritePLanguage,
+      lookingFor: newUser.lookingFor,
+      city: newUser.city,
       email: newUser.email, 
       id: newUser.id
     }
@@ -145,6 +147,8 @@ router.post('/login', async (req, res) => {
       photo: foundUser.photo,
       birthYear: foundUser.birthYear,
       favoritePLanguage: foundUser.favoritePLanguage,
+      lookingFor: foundUser.lookingFor,
+      city: foundUser.city,
       email: foundUser.email, 
       id: foundUser.id
     }
