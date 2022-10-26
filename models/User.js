@@ -1,15 +1,6 @@
 // require mongoose ODM
 const mongoose = require('mongoose')
 
-const photoSchema = mongoose.Schema({
-  public_id: {
-    type: String
-  },
-  url: {
-    type: String
-  }
-})
-
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String
@@ -47,8 +38,8 @@ const UserSchema = new mongoose.Schema({
   matchedUsers: {
     type: Array
   },
-  photos: {
-    type: [photoSchema]
+  photo: {
+    type: String
   },
   biography: {
     type: String
