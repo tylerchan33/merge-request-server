@@ -219,15 +219,10 @@ router.put('/profile/:userId/edit', async (req, res) => {
 // adds users to users liked array
 router.post("/:userId/liked", async (req, res) => {
   try{
-    const findUser = await db.User.findOne({
-      id: req.params.id
-    })
+    const findUser = await db.User.findById(req.params.userId)
     // placeholder for now
-    const likes = req.body.otherperson
-    console.log(findUser)
+    const likes = req.body.likedUsers
     findUser.likedUsers.push(likes)
-    
-
     res.json(findUser)
     await findUser.save()
   } catch(err) {
@@ -237,12 +232,10 @@ router.post("/:userId/liked", async (req, res) => {
 
 router.post("/:userId/rejected", async (req, res) => {
   try{
-    const findUser = await db.User.findOne({
-      id: req.params.id
-    })
+    const findUser = await db.User.findById(req.params.userId)
     // placeholder for now
-    const rejected = req.body.otherperson
-    console.log(findUser)
+    const rejected = req.body.rejectedUsers
+    console.log("findUser", findUser)
     findUser.rejectedUsers.push(rejected)
     
 
