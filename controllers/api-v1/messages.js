@@ -15,14 +15,16 @@ router.post("/new", async (req, res) => {
     }
 })
 
-// router.get("/", async (req, res) => {
-//     try {
-//         const messages = await db.Message.find({})
-//         res.json(messages)
-//     } catch(err) {
-//         console.warn(err)
-//     }
-// })
+
+// need to add the to
+router.get("/:id", async (req, res) => {
+    try {
+        const messages = await db.Message.find({from: req.params.id, to: 12312312312})
+        res.json(messages)
+    } catch(err) {
+        console.warn(err)
+    }
+})
 
 
 

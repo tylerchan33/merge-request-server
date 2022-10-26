@@ -5,9 +5,14 @@ const jwt = require('jsonwebtoken')
 const authLockedRoute = require('./authLockedRoute')
 
 
-// GET /users - test endpoint
-router.get('/', (req, res) => {
-  res.json({ msg: 'welcome to the users endpoint' })
+// GET all /users - test endpoint
+router.get('/', async (req, res) => {
+  try {
+    const users = await db.User.find({})
+    res.json(users)
+  } catch(err) {
+    console.warn(err)
+  }
 })
 
 // POST /users/register - CREATE new user
@@ -101,7 +106,7 @@ router.get('/auth-locked', authLockedRoute, (req, res) => {
   res.json( { msg: 'welcome to the private route!' })
 })
 
-// GET user
+// GET single user
 router.get('/:userId', authLockedRoute, async (req, res) => {
   try {
     const findUser = await db.User.findById(req.params.userId)
@@ -152,7 +157,7 @@ router.put('/profile/:userId/edit', async (req, res) => {
     res.status(500).json({ msg: 'server error'  })
   }
 })
-
+// adds users to users liked array
 router.post("/:userId/liked", async (req, res) => {
   try{
     const findUser = await db.User.findOne({
@@ -171,6 +176,7 @@ router.post("/:userId/liked", async (req, res) => {
   }
 })
 
+// adds match to users matched array
 router.post("/:userId/addmatch", async (req, res) => {
   try{
     const findUser = await db.User.findOne({
@@ -183,6 +189,16 @@ router.post("/:userId/addmatch", async (req, res) => {
 
     res.json(findUser)
     await findUser.save()
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
+// gets user's matches
+router.get("/:userId/matches", async (req, res) => {
+  try {
+    const matches = await db.User.findOne({id: req.params.id })
+    res.json(matches.matchedUsers)
   } catch(err) {
     console.warn(err)
   }
