@@ -101,6 +101,10 @@ router.post('/register', async (req, res) => {
     // create jwt payload
     const payload = {
       firstName: newUser.firstName,
+      biography: newUser.biography,
+      photo: newUser.photo,
+      birthYear: newUser.birthYear,
+      favoritePLanguage: newUser.favoritePLanguage,
       email: newUser.email, 
       id: newUser.id
     }
@@ -137,6 +141,10 @@ router.post('/login', async (req, res) => {
     // create jwt payload
     const payload = {
       firstName: foundUser.firstName,
+      biography: foundUser.biography,
+      photo: foundUser.photo,
+      birthYear: foundUser.birthYear,
+      favoritePLanguage: foundUser.favoritePLanguage,
       email: foundUser.email, 
       id: foundUser.id
     }
