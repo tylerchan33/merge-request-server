@@ -19,7 +19,8 @@ router.post("/new", async (req, res) => {
 // need to add the to
 router.get("/:id", async (req, res) => {
     try {
-        const messages = await db.Message.find({from: req.params.id, to: 12312312312})
+        // need to change to have the other id of the person
+        const messages = await db.Message.find({from: req.params.id, to: req.params.otherperson})
         res.json(messages)
     } catch(err) {
         console.warn(err)

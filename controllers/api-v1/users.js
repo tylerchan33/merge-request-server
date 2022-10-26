@@ -15,6 +15,54 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/lookingfor/No%20Preference', async (req, res) => {
+  try {
+    // options man, woman, friends, no preference 
+    // man is placeholder for now
+    
+    const users = await db.User.find()
+    res.json(users)
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
+router.get('/lookingfor/friends', async (req, res) => {
+  try {
+    // options man, woman, friends, no preference 
+    // man is placeholder for now
+    
+    const users = await db.User.find({lookingFor: "Friends"})
+    res.json(users)
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
+router.get('/lookingfor/man', async (req, res) => {
+  try {
+    // options man, woman, friends, no preference 
+    // man is placeholder for now
+    
+    const users = await db.User.find({lookingFor: "Man"})
+    res.json(users)
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
+router.get('/lookingfor/woman', async (req, res) => {
+  try {
+    // options man, woman, friends, no preference 
+    // man is placeholder for now
+    
+    const users = await db.User.find({lookingFor: "Woman"})
+    res.json(users)
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
 // POST /users/register - CREATE new user
 router.post('/register', async (req, res) => {
   try {
@@ -43,13 +91,15 @@ router.post('/register', async (req, res) => {
       gender: req.body.gender,
       city: req.body.city,
       lookingFor: req.body.lookingFor,
+      photo: req.body.photo,
+      favoritePLanguage: req.body.favoritePLanguage
     })
   
     await newUser.save()
 
     // create jwt payload
     const payload = {
-      name: newUser.name,
+      firstName: newUser.firstName,
       email: newUser.email, 
       id: newUser.id
     }
@@ -85,7 +135,7 @@ router.post('/login', async (req, res) => {
 
     // create jwt payload
     const payload = {
-      name: foundUser.name,
+      firstName: foundUser.firstName,
       email: foundUser.email, 
       id: foundUser.id
     }
@@ -107,7 +157,7 @@ router.get('/auth-locked', authLockedRoute, (req, res) => {
 })
 
 // GET single user
-router.get('/:userId', authLockedRoute, async (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
     const findUser = await db.User.findById(req.params.userId)
     res.json(findUser)
