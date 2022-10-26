@@ -25,3 +25,5 @@ router.post('/upload/:id', async (req,res) => {
         res.status(500)
     }
 })
+
+module.exports = router

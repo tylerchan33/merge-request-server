@@ -23,14 +23,21 @@ router.post('/register', async (req, res) => {
   
     // hash password
     const password = req.body.password
-    const saltRounds = 12;
+    const saltRounds = 12
     const hashedPassword = await bcrypt.hash(password, saltRounds)
   
     // create new user
     const newUser = new db.User({
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
-      password: hashedPassword
+      password: hashedPassword,
+      birthDay: req.body.birthDay,
+      birthMonth: req.body.birthMonth,
+      birthYear: req.body.birthYear,
+      gender: req.body.gender,
+      city: req.body.city,
+      lookingFor: req.body.lookingFor,
     })
   
     await newUser.save()
@@ -92,6 +99,93 @@ router.post('/login', async (req, res) => {
 // GET /auth-locked - will redirect if bad jwt token is found
 router.get('/auth-locked', authLockedRoute, (req, res) => {
   res.json( { msg: 'welcome to the private route!' })
+})
+
+// GET user
+router.get('/:userId', authLockedRoute, async (req, res) => {
+  try {
+    const findUser = await db.User.findById(req.params.userId)
+    res.json(findUser)
+  } catch(error) {
+    console.log(error)
+    res.status(500).json({ msg: "server error"})
+  }
+})
+
+router.put('/profile/:userId/edit', async (req, res) => {
+  try {
+    const findUser = await db.User.findOne({
+      id: req.params.id
+    })
+
+    if(!findUser) return res.status(400).json({message: "cannot find user"})
+
+    const options = { new: true }
+    const password = req.body.password
+    const saltRounds = 12
+    const hashedPassword = await bcrypt.hash(password, saltRounds)
+    const body = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: hashedPassword,
+      birthDay: req.body.birthDay,
+      birthMonth: req.body.birthMonth,
+      birthYear: req.body.birthYear,
+      gender: req.body.gender,
+      city: req.body.city,
+      lookingFor: req.body.lookingFor,
+    }
+    const updateUser = await db.User.findByIdAndUpdate(req.params.userId, body, options)
+   
+    const payload = {
+      name: updateUser.name,
+      username: updateUser.username,
+      email: updateUser.email,
+      id: updateUser.id
+    }
+    const token = await jwt.sign(payload, process.env.JWT_SECRET)
+    res.json({ token })
+
+  } catch(err) {
+    console.log(err)
+    res.status(500).json({ msg: 'server error'  })
+  }
+})
+
+router.post("/:userId/liked", async (req, res) => {
+  try{
+    const findUser = await db.User.findOne({
+      id: req.params.id
+    })
+    // placeholder for now
+    const likes = req.body.otherperson
+    console.log(findUser)
+    findUser.likedUsers.push(likes)
+    
+
+    res.json(findUser)
+    await findUser.save()
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
+router.post("/:userId/addmatch", async (req, res) => {
+  try{
+    const findUser = await db.User.findOne({
+      id: req.params.id
+    })
+    // placeholder for now
+    const matched = req.body.otherperson
+   
+    findUser.matchedUsers.push(matched)
+
+    res.json(findUser)
+    await findUser.save()
+  } catch(err) {
+    console.warn(err)
+  }
 })
 
 module.exports = router
