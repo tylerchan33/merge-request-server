@@ -92,7 +92,8 @@ router.post('/register', async (req, res) => {
       city: req.body.city,
       lookingFor: req.body.lookingFor,
       photo: req.body.photo,
-      favoritePLanguage: req.body.favoritePLanguage
+      favoritePLanguage: req.body.favoritePLanguage,
+      biography: req.body.biography
     })
   
     await newUser.save()
