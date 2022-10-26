@@ -235,6 +235,24 @@ router.post("/:userId/liked", async (req, res) => {
   }
 })
 
+router.post("/:userId/rejected", async (req, res) => {
+  try{
+    const findUser = await db.User.findOne({
+      id: req.params.id
+    })
+    // placeholder for now
+    const rejected = req.body.otherperson
+    console.log(findUser)
+    findUser.rejectedUsers.push(rejected)
+    
+
+    res.json(findUser)
+    await findUser.save()
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
 // adds match to users matched array
 router.post("/:userId/addmatch", async (req, res) => {
   try{

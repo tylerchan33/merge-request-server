@@ -37,6 +37,9 @@ const UserSchema = new mongoose.Schema({
   },
   matchedUsers: {
     type: Array
+  }, 
+  rejectedUsers: {
+    type: Array
   },
   photo: {
     type: String
