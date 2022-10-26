@@ -43,6 +43,9 @@ const UserSchema = new mongoose.Schema({
   },
   biography: {
     type: String
+  },
+  favoritePLanguage: {
+    type: String
   }
 }, {
   timestamps: true
