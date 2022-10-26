@@ -157,7 +157,7 @@ router.get('/auth-locked', authLockedRoute, (req, res) => {
 })
 
 // GET single user
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', authLockedRoute, async (req, res) => {
   try {
     const findUser = await db.User.findById(req.params.userId)
     res.json(findUser)
