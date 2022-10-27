@@ -170,7 +170,7 @@ router.get('/auth-locked', authLockedRoute, (req, res) => {
 })
 
 // GET single user
-router.get('/:userId', authLockedRoute, async (req, res) => {
+router.get('/:userId',  async (req, res) => {
   try {
     const findUser = await db.User.findById(req.params.userId)
     res.json(findUser)
@@ -180,39 +180,45 @@ router.get('/:userId', authLockedRoute, async (req, res) => {
   }
 })
 
-router.put('/profile/:userId/edit', async (req, res) => {
+router.put('/:userId/edit', async (req, res) => {
   try {
-    const findUser = await db.User.findOne({
-      id: req.params.id
-    })
+    const findUser = await db.User.findById(req.params.userId)
 
     if(!findUser) return res.status(400).json({message: "cannot find user"})
 
+    // const options = { new: true }
+    // const password = req.body.password
+    // const saltRounds = 12
+    // const hashedPassword = await bcrypt.hash(password, saltRounds)
+    // const body = {
+    //   firstName: req.body.firstName,
+    //   lastName: req.body.lastName,
+    //   email: req.body.email,
+    //   password: hashedPassword,
+    //   birthDay: req.body.birthDay,
+    //   birthMonth: req.body.birthMonth,
+    //   birthYear: req.body.birthYear,
+    //   gender: req.body.gender,
+    //   city: req.body.city,
+    //   lookingFor: req.body.lookingFor,
+    // }
     const options = { new: true }
-    const password = req.body.password
-    const saltRounds = 12
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
-    const body = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hashedPassword,
-      birthDay: req.body.birthDay,
-      birthMonth: req.body.birthMonth,
-      birthYear: req.body.birthYear,
-      gender: req.body.gender,
-      city: req.body.city,
-      lookingFor: req.body.lookingFor,
-    }
-    const updateUser = await db.User.findByIdAndUpdate(req.params.userId, body, options)
+    const updateUser = await db.User.findByIdAndUpdate(req.params.userId, req.body, options)
    
     const payload = {
-      name: updateUser.name,
-      username: updateUser.username,
-      email: updateUser.email,
+      firstName: updateUser.firstName,
+      biography: updateUser.biography,
+      photo: updateUser.photo,
+      birthYear: updateUser.birthYear,
+      favoritePLanguage: updateUser.favoritePLanguage,
+      lookingFor: updateUser.lookingFor,
+      city: updateUser.city,
+      email: updateUser.email, 
       id: updateUser.id
     }
+    console.log(payload)
     const token = await jwt.sign(payload, process.env.JWT_SECRET)
+    console.log({ token })
     res.json({ token })
 
   } catch(err) {
