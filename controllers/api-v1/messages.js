@@ -17,10 +17,12 @@ router.post("/new", async (req, res) => {
 
 
 // need to add the to
-router.get("/:id", async (req, res) => {
+router.get("/:from/:to", async (req, res) => {
     try {
         // need to change to have the other id of the person
-        const messages = await db.Message.find({from: req.params.id, to: req.params.otherperson})
+        console.log(req.params)
+        const messages = await db.Message.find({from: req.params.from, to: req.params.to})
+        console.log(messages)
         res.json(messages)
     } catch(err) {
         console.warn(err)
