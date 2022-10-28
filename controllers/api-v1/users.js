@@ -132,7 +132,8 @@ router.post('/register', async (req, res) => {
       city: newUser.city,
       email: newUser.email, 
       id: newUser.id,
-      age: newUser.age
+      age: newUser.age,
+      password: newUser.password
     }
 
     // sign jwt and send back
@@ -153,7 +154,7 @@ router.post('/login', async (req, res) => {
       email: req.body.email
     })
 
-    const noLoginMessage = 'Incorrect username or password'
+    const noLoginMessage = 'Incorrect email or password'
 
     // if the user is not found in the db, return and sent a status of 400 with a message
     if(!foundUser) return res.status(400).json({ msg: noLoginMessage, body: req.body})
@@ -175,7 +176,8 @@ router.post('/login', async (req, res) => {
       city: foundUser.city,
       email: foundUser.email, 
       id: foundUser.id,
-      age: foundUser.age
+      age: foundUser.age,
+      password: foundUser.password
     }
 
     // sign jwt and send back
@@ -239,7 +241,8 @@ router.put('/:userId/edit', async (req, res) => {
       lookingFor: updateUser.lookingFor,
       city: updateUser.city,
       email: updateUser.email, 
-      id: updateUser.id
+      id: updateUser.id,
+      password: updateUser.password
     }
     console.log(payload)
     const token = await jwt.sign(payload, process.env.JWT_SECRET)
@@ -263,6 +266,59 @@ router.delete('/:userId/edit', async (req,res)=> {
 }
 })
 
+router.put('/:id/secureaccount', async (req, res) => {
+  try {
+    
+    // console.log('hiiiiiiiii', req.params.id)
+    // try to find user in the db
+    const foundUser = await db.User.findById(req.params.id)
+    console.log(foundUser)
+    const noLoginMessage = 'Incorrect username or password'
+
+    // if the user is not found in the db, return and sent a status of 400 with a message
+    if(!foundUser) return res.status(400).json({ msg: noLoginMessage })
+    
+    // check the password from the req body against the password in the database
+    // console.log('PASSWORD???', req.body.password)
+    const matchPasswords = await bcrypt.compare(req.body.password, foundUser.password)
+    console.log('MATCHPASSWORD',matchPasswords)
+    
+    // if provided password does not match, return an send a status of 400 with a message
+    if(!matchPasswords) return res.status(400).json({ msg: noLoginMessage })
+
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, 12)
+    const options = { new : true }
+    const editUser = await db.User.findByIdAndUpdate(req.params.id,{
+      name: req.body.name,
+      password: hashedPassword,
+      email: req.body.email
+    }, options)
+
+    console.log('EDITUSER', editUser)
+    // await db.User.save()
+    // create jwt payload
+    const payload = {
+      firstName: editUser.firstName,
+      biography: editUser.biography,
+      photo: editUser.photo,
+      birthYear: editUser.birthYear,
+      favoritePLanguage: editUser.favoritePLanguage,
+      lookingFor: editUser.lookingFor,
+      city: editUser.city,
+      email: editUser.email, 
+      id: editUser.id,
+      password: editUser.password
+    }
+
+    // sign jwt and send back
+    const token = await jwt.sign(payload, process.env.JWT_SECRET)
+
+    res.json({ token })
+  } catch(error) {
+    console.log(error)
+    res.status(500).json({ msg: 'server error'  })
+  }
+})
 
 
 
