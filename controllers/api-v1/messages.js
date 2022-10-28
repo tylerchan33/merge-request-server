@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const { Message } = require("../../models/Message")
 const db = require('../../models')
 const authLockedRoute = require('./authLockedRoute')
 
