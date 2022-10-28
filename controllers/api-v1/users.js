@@ -248,6 +248,21 @@ router.put('/:userId/edit', async (req, res) => {
     res.status(500).json({ msg: 'server error'  })
   }
 })
+
+// deleting a user's profile
+router.delete('/:userId/edit', async (req,res)=> {
+  try{
+    await db.User.findByIdAndDelete(req.params.userId)
+    res.sendStatus(204)
+}catch(err){
+    console.log(err)
+    res.status(500).json({ message: 'Internal server error'})
+}
+})
+
+
+
+
 // adds users to users liked array
 router.post("/:userId/liked", async (req, res) => {
   try{
@@ -305,5 +320,8 @@ router.get("/:userId/matches", async (req, res) => {
     console.warn(err)
   }
 })
+
+
+
 
 module.exports = router
