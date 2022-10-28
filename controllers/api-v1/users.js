@@ -115,7 +115,8 @@ router.post('/register', async (req, res) => {
       lookingFor: req.body.lookingFor,
       photo: req.body.photo,
       favoritePLanguage: req.body.favoritePLanguage,
-      biography: req.body.biography
+      biography: req.body.biography,
+      age: req.body.age
     })
   
     await newUser.save()
@@ -130,7 +131,8 @@ router.post('/register', async (req, res) => {
       lookingFor: newUser.lookingFor,
       city: newUser.city,
       email: newUser.email, 
-      id: newUser.id
+      id: newUser.id,
+      age: newUser.age
     }
 
     // sign jwt and send back
@@ -172,7 +174,8 @@ router.post('/login', async (req, res) => {
       lookingFor: foundUser.lookingFor,
       city: foundUser.city,
       email: foundUser.email, 
-      id: foundUser.id
+      id: foundUser.id,
+      age: foundUser.age
     }
 
     // sign jwt and send back
