@@ -321,7 +321,22 @@ router.get("/:userId/matches", async (req, res) => {
   }
 })
 
-
+router.post("/:id/deletematch", async (req, res) => {
+  try{
+    console.log(req.params.id)
+    const findUser = await db.User.findById(req.params.id)
+    // placeholder for now
+    const matched = req.body.otherperson
+    console.log(matched)
+    findUser.matchedUsers.pull(matched)
+    findUser.likedUsers.pull(matched)
+    console.log('DELETING')
+    res.json(findUser)
+    await findUser.save()
+  } catch(err) {
+    console.warn(err)
+  }
+})
 
 
 module.exports = router
