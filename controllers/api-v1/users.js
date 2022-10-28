@@ -15,6 +15,28 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/matchedusers', async (req, res) => {
+  try {
+    // console.log(req.query.matchids)
+    const matchedusersid = JSON.parse(req.query.matchids)
+    console.log(matchedusersid)
+    const pipeline = [
+      {
+        '$match': {
+          'email': {
+            '$in': matchedusersid
+          }
+        }
+      }
+    ]
+    const users = await db.User.aggregate(pipeline)
+    console.log('HISDIHAOSDBAWOIUD',users)
+    res.json(users)
+  } catch(err) {
+    console.warn(err)
+  }
+})
+
 router.get('/lookingfor/No%20Preference', async (req, res) => {
   try {
     // options man, woman, friends, no preference 
@@ -257,14 +279,14 @@ router.post("/:userId/rejected", async (req, res) => {
 })
 
 // adds match to users matched array
-router.post("/:userId/addmatch", async (req, res) => {
+router.post("/:id/addmatch", async (req, res) => {
   try{
-    const findUser = await db.User.findOne({
-      id: req.params.id
-    })
+    console.log(req.params.id)
+    const findUser = await db.User.findById(req.params.id
+    )
     // placeholder for now
     const matched = req.body.otherperson
-   
+    console.log(matched)
     findUser.matchedUsers.push(matched)
 
     res.json(findUser)
