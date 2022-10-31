@@ -381,7 +381,7 @@ router.post("/:id/addmatch", async (req, res) => {
 })
 
 // gets user's matches
-router.get("/:userId/matches", authLockedRoute, async (req, res) => {
+router.get("/:userId/matches", async (req, res) => {
   try {
     const matches = await db.User.findOne({id: req.params.id })
     res.json(matches.matchedUsers)
@@ -390,7 +390,7 @@ router.get("/:userId/matches", authLockedRoute, async (req, res) => {
   }
 })
 
-router.post("/:id/deletematch", authLockedRoute, async (req, res) => {
+router.post("/:id/deletematch", async (req, res) => {
   try{
     console.log(req.params.id)
     const findUser = await db.User.findById(req.params.id)
