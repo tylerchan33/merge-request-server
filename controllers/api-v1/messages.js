@@ -16,7 +16,7 @@ router.post("/new", async (req, res) => {
 
 
 // need to add the to
-router.get("/:from/:to", authLockedRoute, async (req, res) => {
+router.get("/:from/:to", async (req, res) => {
     try {
         // need to change to have the other id of the person
         console.log(req.params)
