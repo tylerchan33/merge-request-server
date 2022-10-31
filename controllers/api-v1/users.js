@@ -213,7 +213,7 @@ router.get('/:userId',  async (req, res) => {
   }
 })
 
-router.put('/:userId/edit', async (req, res) => {
+router.put('/:userId/edit', authLockedRoute, async (req, res) => {
   try {
     const findUser = await db.User.findById(req.params.userId)
 
@@ -264,7 +264,7 @@ router.put('/:userId/edit', async (req, res) => {
 })
 
 // deleting a user's profile
-router.delete('/:userId/edit', async (req,res)=> {
+router.delete('/:userId/edit', authLockedRoute, async (req,res)=> {
   try{
     await db.User.findByIdAndDelete(req.params.userId)
     res.sendStatus(204)
@@ -274,7 +274,7 @@ router.delete('/:userId/edit', async (req,res)=> {
 }
 })
 
-router.put('/:id/secureaccount', async (req, res) => {
+router.put('/:id/secureaccount', authLockedRoute, async (req, res) => {
   try {
     
     // console.log('hiiiiiiiii', req.params.id)
@@ -381,7 +381,7 @@ router.post("/:id/addmatch", async (req, res) => {
 })
 
 // gets user's matches
-router.get("/:userId/matches", async (req, res) => {
+router.get("/:userId/matches", authLockedRoute, async (req, res) => {
   try {
     const matches = await db.User.findOne({id: req.params.id })
     res.json(matches.matchedUsers)
@@ -390,7 +390,7 @@ router.get("/:userId/matches", async (req, res) => {
   }
 })
 
-router.post("/:id/deletematch", async (req, res) => {
+router.post("/:id/deletematch", authLockedRoute, async (req, res) => {
   try{
     console.log(req.params.id)
     const findUser = await db.User.findById(req.params.id)

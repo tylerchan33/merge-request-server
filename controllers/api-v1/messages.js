@@ -5,7 +5,7 @@ const authLockedRoute = require('./authLockedRoute')
 
 
 
-router.post("/new", async (req, res) => {
+router.post("/new", authLockedRoute, async (req, res) => {
     try {
         const newMessage = await db.Message.create(req.body)
         res.json(newMessage)
@@ -16,7 +16,7 @@ router.post("/new", async (req, res) => {
 
 
 // need to add the to
-router.get("/:from/:to", async (req, res) => {
+router.get("/:from/:to", authLockedRoute, async (req, res) => {
     try {
         // need to change to have the other id of the person
         console.log(req.params)
