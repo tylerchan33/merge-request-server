@@ -2,7 +2,6 @@ const router = require('express').Router()
 const db = require('../../models')
 const cloudinary = require("cloudinary").v2
 
-
 //cloudinary config
 const cloudinaryConfig = cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
@@ -10,7 +9,6 @@ const cloudinaryConfig = cloudinary.config({
   api_secret: process.env.CLOUDINARYSECRET,
   secure: true
 })
-
 
 router.post('/upload/:id', async (req,res) => {
     try {

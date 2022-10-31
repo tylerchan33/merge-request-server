@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const authLockedRoute = require('./authLockedRoute')
 
-
 // GET all /users - test endpoint
 router.get('/', async (req, res) => {
   try {
@@ -17,9 +16,7 @@ router.get('/', async (req, res) => {
 
 router.get('/matchedusers', async (req, res) => {
   try {
-    // console.log(req.query.matchids)
     const matchedusersid = JSON.parse(req.query.matchids)
-    console.log(matchedusersid)
     const pipeline = [
       {
         '$match': {
@@ -30,7 +27,6 @@ router.get('/matchedusers', async (req, res) => {
       }
     ]
     const users = await db.User.aggregate(pipeline)
-    console.log('HISDIHAOSDBAWOIUD',users)
     res.json(users)
   } catch(err) {
     console.warn(err)
@@ -40,8 +36,6 @@ router.get('/matchedusers', async (req, res) => {
 router.get('/lookingfor/No%20Preference', async (req, res) => {
   try {
     // options man, woman, friends, no preference 
-    // man is placeholder for now
-    
     const users = await db.User.find()
     res.json(users)
   } catch(err) {
@@ -52,8 +46,6 @@ router.get('/lookingfor/No%20Preference', async (req, res) => {
 router.get('/lookingfor/friends', async (req, res) => {
   try {
     // options man, woman, friends, no preference 
-    // man is placeholder for now
-    
     const users = await db.User.find({lookingFor: "Friends"})
     res.json(users)
   } catch(err) {
@@ -63,9 +55,7 @@ router.get('/lookingfor/friends', async (req, res) => {
 
 router.get('/lookingfor/man', async (req, res) => {
   try {
-    // options man, woman, friends, no preference 
-    // man is placeholder for now
-    
+    // options man, woman, friends, no preference  
     const users = await db.User.find({lookingFor: "Man"})
     res.json(users)
   } catch(err) {
@@ -76,8 +66,6 @@ router.get('/lookingfor/man', async (req, res) => {
 router.get('/lookingfor/woman', async (req, res) => {
   try {
     // options man, woman, friends, no preference 
-    // man is placeholder for now
-    
     const users = await db.User.find({lookingFor: "Woman"})
     res.json(users)
   } catch(err) {
@@ -145,7 +133,7 @@ router.post('/register', async (req, res) => {
 
     res.json({ token })
   } catch (error) {
-    console.log(error)
+    console.warn(error)
     res.status(500).json({ msg: 'server error'  })
   }
 })
@@ -191,7 +179,7 @@ router.post('/login', async (req, res) => {
 
     res.json({ token })
   } catch(error) {
-    console.log(error)
+    console.warn(error)
     res.status(500).json({ msg: 'server error'  })
   }
 })
@@ -208,7 +196,7 @@ router.get('/:userId',  async (req, res) => {
     const findUser = await db.User.findById(req.params.userId)
     res.json(findUser)
   } catch(error) {
-    console.log(error)
+    console.warn(error)
     res.status(500).json({ msg: "server error"})
   }
 })
@@ -219,22 +207,6 @@ router.put('/:userId/edit', async (req, res) => {
 
     if(!findUser) return res.status(400).json({message: "cannot find user"})
 
-    // const options = { new: true }
-    // const password = req.body.password
-    // const saltRounds = 12
-    // const hashedPassword = await bcrypt.hash(password, saltRounds)
-    // const body = {
-    //   firstName: req.body.firstName,
-    //   lastName: req.body.lastName,
-    //   email: req.body.email,
-    //   password: hashedPassword,
-    //   birthDay: req.body.birthDay,
-    //   birthMonth: req.body.birthMonth,
-    //   birthYear: req.body.birthYear,
-    //   gender: req.body.gender,
-    //   city: req.body.city,
-    //   lookingFor: req.body.lookingFor,
-    // }
     const options = { new: true }
     const updateUser = await db.User.findByIdAndUpdate(req.params.userId, req.body, options)
    
@@ -252,13 +224,10 @@ router.put('/:userId/edit', async (req, res) => {
       id: updateUser.id,
       password: updateUser.password
     }
-    console.log(payload)
     const token = await jwt.sign(payload, process.env.JWT_SECRET)
-    console.log({ token })
     res.json({ token })
 
   } catch(err) {
-    console.log(err)
     res.status(500).json({ msg: 'server error'  })
   }
 })
@@ -269,27 +238,22 @@ router.delete('/:userId/edit', async (req,res)=> {
     await db.User.findByIdAndDelete(req.params.userId)
     res.sendStatus(204)
 }catch(err){
-    console.log(err)
+    console.warn(err)
     res.status(500).json({ message: 'Internal server error'})
 }
 })
 
 router.put('/:id/secureaccount', async (req, res) => {
   try {
-    
-    // console.log('hiiiiiiiii', req.params.id)
     // try to find user in the db
     const foundUser = await db.User.findById(req.params.id)
-    console.log(foundUser)
     const noLoginMessage = 'Incorrect username or password'
 
     // if the user is not found in the db, return and sent a status of 400 with a message
     if(!foundUser) return res.status(400).json({ msg: noLoginMessage })
     
     // check the password from the req body against the password in the database
-    // console.log('PASSWORD???', req.body.password)
     const matchPasswords = await bcrypt.compare(req.body.password, foundUser.password)
-    console.log('MATCHPASSWORD',matchPasswords)
     
     // if provided password does not match, return an send a status of 400 with a message
     if(!matchPasswords) return res.status(400).json({ msg: noLoginMessage })
@@ -302,7 +266,6 @@ router.put('/:id/secureaccount', async (req, res) => {
       email: req.body.email
     }, options)
 
-    console.log('EDITUSER', editUser)
     // await db.User.save()
     // create jwt payload
     const payload = {
@@ -325,7 +288,7 @@ router.put('/:id/secureaccount', async (req, res) => {
 
     res.json({ token })
   } catch(error) {
-    console.log(error)
+    console.warn(error)
     res.status(500).json({ msg: 'server error'  })
   }
 })
@@ -336,7 +299,6 @@ router.put('/:id/secureaccount', async (req, res) => {
 router.post("/:userId/liked", async (req, res) => {
   try{
     const findUser = await db.User.findById(req.params.userId)
-    // placeholder for now
     const likes = req.body.likedUsers
     findUser.likedUsers.push(likes)
     res.json(findUser)
@@ -349,12 +311,8 @@ router.post("/:userId/liked", async (req, res) => {
 router.post("/:userId/rejected", async (req, res) => {
   try{
     const findUser = await db.User.findById(req.params.userId)
-    // placeholder for now
     const rejected = req.body.rejectedUsers
-    console.log("findUser", findUser)
     findUser.rejectedUsers.push(rejected)
-    
-
     res.json(findUser)
     await findUser.save()
   } catch(err) {
@@ -365,12 +323,10 @@ router.post("/:userId/rejected", async (req, res) => {
 // adds match to users matched array
 router.post("/:id/addmatch", async (req, res) => {
   try{
-    console.log(req.params.id)
     const findUser = await db.User.findById(req.params.id
     )
     // placeholder for now
     const matched = req.body.otherperson
-    console.log(matched)
     findUser.matchedUsers.push(matched)
 
     res.json(findUser)
@@ -392,20 +348,15 @@ router.get("/:userId/matches", async (req, res) => {
 
 router.post("/:id/deletematch", async (req, res) => {
   try{
-    console.log(req.params.id)
     const findUser = await db.User.findById(req.params.id)
-    // placeholder for now
     const matched = req.body.otherperson
-    console.log(matched)
     findUser.matchedUsers.pull(matched)
     findUser.likedUsers.pull(matched)
-    console.log('DELETING')
     res.json(findUser)
     await findUser.save()
   } catch(err) {
     console.warn(err)
   }
 })
-
 
 module.exports = router
