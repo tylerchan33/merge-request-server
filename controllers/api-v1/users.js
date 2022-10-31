@@ -274,7 +274,7 @@ router.delete('/:userId/edit', async (req,res)=> {
 }
 })
 
-router.put('/:id/secureaccount', authLockedRoute, async (req, res) => {
+router.put('/:id/secureaccount', async (req, res) => {
   try {
     
     // console.log('hiiiiiiiii', req.params.id)
