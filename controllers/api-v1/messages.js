@@ -5,7 +5,7 @@ const authLockedRoute = require('./authLockedRoute')
 
 
 
-router.post("/new", authLockedRoute, async (req, res) => {
+router.post("/new", async (req, res) => {
     try {
         const newMessage = await db.Message.create(req.body)
         res.json(newMessage)

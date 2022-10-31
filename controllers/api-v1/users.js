@@ -213,7 +213,7 @@ router.get('/:userId',  async (req, res) => {
   }
 })
 
-router.put('/:userId/edit', authLockedRoute, async (req, res) => {
+router.put('/:userId/edit', async (req, res) => {
   try {
     const findUser = await db.User.findById(req.params.userId)
 
