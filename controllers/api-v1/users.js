@@ -264,7 +264,7 @@ router.put('/:userId/edit', authLockedRoute, async (req, res) => {
 })
 
 // deleting a user's profile
-router.delete('/:userId/edit', authLockedRoute, async (req,res)=> {
+router.delete('/:userId/edit', async (req,res)=> {
   try{
     await db.User.findByIdAndDelete(req.params.userId)
     res.sendStatus(204)
